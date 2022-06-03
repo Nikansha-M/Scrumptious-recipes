@@ -36,7 +36,8 @@
       Created on {{ recipe.created }} |
       Updated on {{ recipe.updated }}
     </p>
-    <p>Tags: {% for tag in recipe.tags.all %}{{ tag.word }} {% endfor %}</p>
+    {% comment %} changed tag.word to tag.name {% endcomment %}
+    <p>Tags: {% for tag in recipe.tags.all %}{{ tag.name }} {% endfor %}</p>
     <p>{{ recipe.description }}</p>
     <h2>Ingredients</h2>
     <table>
