@@ -1,4 +1,6 @@
 {% load static %}
+{% load markdownify %}
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -38,7 +40,8 @@
     </p>
     {% comment %} changed tag.word to tag.name {% endcomment %}
     <p>Tags: {% for tag in recipe.tags.all %}{{ tag.name }} {% endfor %}</p>
-    <p>{{ recipe.description }}</p>
+    {% comment %} remove paragraph tags and add "| markdownify" to recipe.description {% endcomment %}
+    {{ recipe.description | markdownify }}
     <h2>Ingredients</h2>
     <table>
       <thead>

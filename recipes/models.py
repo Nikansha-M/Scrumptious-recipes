@@ -39,12 +39,12 @@ class FoodItem(models.Model):
 
 
 class Ingredient(models.Model):
-    amount = models.FloatField()
     recipe = models.ForeignKey(
         "Recipe",
         related_name="ingredients",
         on_delete=models.CASCADE
     )
+    amount = models.FloatField()
     measure = models.ForeignKey(
         "Measure",
         on_delete=models.PROTECT
@@ -53,6 +53,7 @@ class Ingredient(models.Model):
         "FoodItem",
         on_delete=models.PROTECT
     )
+
 
     def __str__(self):
         return str(self.amount) + " of " + str(self.food)
