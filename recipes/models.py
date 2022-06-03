@@ -1,4 +1,5 @@
 from django.db import models
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 
 # Create your models here.
@@ -44,7 +45,8 @@ class Ingredient(models.Model):
         related_name="ingredients",
         on_delete=models.CASCADE
     )
-    amount = models.FloatField()
+    # to limit the amount of ingredients to 20
+    amount = models.FloatField(validators=[MinValueValidator(1),MaxValueValidator(20)],)
     measure = models.ForeignKey(
         "Measure",
         on_delete=models.PROTECT
@@ -53,7 +55,6 @@ class Ingredient(models.Model):
         "FoodItem",
         on_delete=models.PROTECT
     )
-
 
     def __str__(self):
         return str(self.amount) + " of " + str(self.food)
