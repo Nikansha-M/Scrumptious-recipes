@@ -21,7 +21,7 @@ class Recipe(models.Model):
     content = models.TextField()
 
     def __str__(self):
-        return self.name + " by " + self.author
+        return self.name
 
 
 class Measure(models.Model):
@@ -77,3 +77,17 @@ class Step(models.Model):
 
     def __str__(self):
         return str(self.recipe_name) + " step " + str(self.order)
+
+
+class Rating(models.Model):
+    value = models.PositiveSmallIntegerField(
+        validators=[MinValueValidator(1),MaxValueValidator(5)]
+    )
+    recipe = models.ForeignKey(
+        "Recipe",
+        related_name="ratings",
+        on_delete=models.CASCADE,
+    )
+
+    def __str__(self):
+        return str(self.recipe) + " rating: " + str(self.value)

@@ -38,6 +38,14 @@
       Created on {{ recipe.created }} |
       Updated on {{ recipe.updated }}
     </p>
+
+    {% comment %} Add the RatingForm so it shows up on the page {% endcomment %}
+    <form method="post" action="{% url 'recipe_rating' recipe.id %}">
+      {% csrf_token %}
+      {{ rating_form.as_p }}
+      <button class="button">Rate</button>
+    </form>
+
     {% comment %} changed tag.word to tag.name {% endcomment %}
     <p>Tags: {% for tag in recipe.tags.all %}{{ tag.name }} {% endfor %}</p>
     {% comment %} remove paragraph tags and add "| markdownify" to recipe.description {% endcomment %}
