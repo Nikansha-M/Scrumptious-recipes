@@ -33,6 +33,7 @@
     {% comment %} Create link to Edit Recipe {% endcomment %}
     <div>
       <a href="{% url 'recipe_edit' recipe.id %}">Edit</a>
+      <a href="{% url 'recipe_delete' recipe.id %}">Delete</a>
     </div>
     {% if recipe.image %}
       <img src="{{ recipe.image }}" class="pull-right">
