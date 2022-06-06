@@ -29,7 +29,9 @@
   </header>
   <main class="recipe-form">
     <form method="post">
+      {% comment %} security token {% endcomment %}
       {% csrf_token %}
+      {% comment %} affects the layout, puts everything inside a paragraph tag {% endcomment %}
       {{ form.as_p }}
       <div class="control">
         <button class="button">Create</button>
