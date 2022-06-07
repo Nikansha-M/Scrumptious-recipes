@@ -7,7 +7,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>New Recipe - Scrumptious</title>
+  <title>Tags - Scrumptious</title>
   <link rel="stylesheet" href="{% static 'css/app.css' %}">
 </head>
 
@@ -30,17 +30,18 @@
       </ul>
     </nav>
   </header>
-  <main class="recipe-form">
-    <form method="post">
-      {% comment %} security token {% endcomment %}
-      {% csrf_token %}
-      {% comment %} affects the layout, puts everything inside a 
-      paragraph tag {% endcomment %}
-      {{ form.as_p }}
-      <div class="control">
-        <button class="button">Create</button>
-      </div>
-    </form>
+
+  <main>
+    <div class="delete-form">
+      <form method="post">
+        {% csrf_token %}
+        <h3>Are you sure you want to delete "{{ tag.name }}"?</h3>
+        {{ form.as_p }}
+        <div>
+          <button class="button">Delete</button>
+        </div>
+      </form>
+    </div>
   </main>
 </body>
 

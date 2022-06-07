@@ -1,4 +1,6 @@
 {% load static %}
+{% load markdownify %}
+
 
 <!DOCTYPE html>
 <html lang="en">
@@ -7,7 +9,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>New Recipe - Scrumptious</title>
+  <title>Tags - Scrumptious</title>
   <link rel="stylesheet" href="{% static 'css/app.css' %}">
 </head>
 
@@ -30,17 +32,18 @@
       </ul>
     </nav>
   </header>
-  <main class="recipe-form">
-    <form method="post">
-      {% comment %} security token {% endcomment %}
-      {% csrf_token %}
-      {% comment %} affects the layout, puts everything inside a 
-      paragraph tag {% endcomment %}
-      {{ form.as_p }}
-      <div class="control">
-        <button class="button">Create</button>
-      </div>
-    </form>
+
+  <main class="tag-detail">
+    <div>
+      <a href="{% url 'tag_edit' tag.id %}">Edit</a>
+      <a href="{% url 'tag_delete' tag.id %}">Delete</a>
+    </div>
+    <h2>Recipes for {{ tag.name }}</h2>
+    {% for recipe in tag.recipes.all %}
+      <p>
+        <a href="{% url 'recipe_detail' recipe.pk %}">{{ recipe.name }}</a>
+      </p>
+    {% endfor %}
   </main>
 </body>
 

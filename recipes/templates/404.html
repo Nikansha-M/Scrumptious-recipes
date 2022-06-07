@@ -1,0 +1,48 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Blog Away</title>
+    <link rel="stylesheet" href="{% static 'css/app.css' %}">
+</head>
+
+<body>
+    
+    <header>
+        <nav>
+            <ul>
+                <li>
+                    <a href="{% url 'home' %}">Scrumptious</a>
+                </li>
+                <li>
+                    <a href="{% url 'admin:index' %}">Admin</a>
+                </li>
+                <li>
+                    <a href="{% url 'recipe_new' %}">Create a new recipe</a>
+                </li>
+                {% comment %} Search Bar {% endcomment %}
+                <p id="search">
+                    <form method="GET">
+                        <input type="text" name="q">
+                        <button type="submit">Search</button>
+                    </form>
+                </p>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <h1>It looks like you took a wrong turn...</h1>
+        <p>Were you trying to visit {{request_path}} ? </p>
+        <p>It looks like you got the following exception: {{exception}}</p>
+    </main>
+    
+    <footer></footer>
+
+</body>
+</html>

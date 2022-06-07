@@ -8,13 +8,8 @@ from django.views.generic.edit import CreateView, UpdateView, DeleteView
 
 from recipes.forms import RatingForm
 
-
-try:
-    from recipes.forms import RecipeForm
-    from recipes.models import Recipe
-except Exception:
-    RecipeForm = None
-    Recipe = None
+from recipes.forms import RecipeForm
+from recipes.models import Recipe
 
 
 # def create_recipe(request):
@@ -78,6 +73,17 @@ class RecipeListView(ListView):
     template_name = "recipes/list.html"
     # to add pagination to the page
     paginate_by = 3
+
+    def get_queryset(self):
+        # get_queryset inheriting from ListView parent class
+        query = self.request.GET.get("q")
+        if not query:
+            # user input should be a string
+            query = ""
+        # from our listof all the recipes, filter out through our description to see if it matches the query
+        return Recipe.objects.filter(
+            description__icontains=query,
+        )
 
 
 

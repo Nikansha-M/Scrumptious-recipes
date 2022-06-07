@@ -27,7 +27,8 @@ SECRET_KEY = (
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+#add "localhost" if you want to show your own 404 error message, change DEBUG = False
+ALLOWED_HOSTS = [] 
 
 
 # Application definition
