@@ -32,10 +32,15 @@ from recipes.models import Recipe
 class RecipeCreateView(LoginRequiredMixin, CreateView):
     model = Recipe
     template_name = "recipes/new.html"
-    fields = ["name", "author", "description", "image"]
+    fields = ["name", "description", "image"]
     # after creating a new recipe, this will redirect folks 
     # back to the home page
     success_url = reverse_lazy("recipes_list")
+    
+    # assign current logged in user as the author to any recipe that is made
+    def form_valid(self, form):
+        form.instance.author = self.request.user
+        return super().form_valid(form)
 
 
 

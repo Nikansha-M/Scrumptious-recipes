@@ -1,14 +1,22 @@
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator
 
+from django.conf import settings
+
+USER_MODEL = settings.AUTH_USER_MODEL
 
 # Create your models here.
 
 # class Recipe -- we're going to inherit from models.Model
 class Recipe(models.Model):
     name = models.CharField(max_length=125)
-    author = models.CharField(max_length=100)
-    
+    author = models.ForeignKey(
+        USER_MODEL,
+        related_name="recipes",
+        on_delete=models.CASCADE,
+        null=True,
+    )
+        
     # TextField is an unlimited amount of text, no max cap
     description = models.TextField()
     
@@ -18,7 +26,6 @@ class Recipe(models.Model):
 
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    content = models.TextField()
 
     def __str__(self):
         return self.name
