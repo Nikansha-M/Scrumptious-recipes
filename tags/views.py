@@ -21,9 +21,11 @@ class TagListView(ListView):
     template_name = "tags/list.html"
     paginate_by = 2
 
+
 class TagDetailView(DetailView):
     model = Tag
     template_name = "tags/detail.html"
+
 
 class TagCreateView(CreateView):
     model = Tag
@@ -31,11 +33,13 @@ class TagCreateView(CreateView):
     fields = ["name"]
     success_url = reverse_lazy("tags_list")
 
+
 class TagUpdateView(UpdateView):
     model = Tag
     template_name = "tags/edit.html"
     fields = ["name"]
     success_url = reverse_lazy("tags_list")
+
 
 class TagDeleteView(DeleteView):
     model = Tag

@@ -7,6 +7,7 @@ USER_MODEL = settings.AUTH_USER_MODEL
 
 # Create your models here.
 
+
 # class Recipe -- we're going to inherit from models.Model
 class Recipe(models.Model):
     name = models.CharField(max_length=125)

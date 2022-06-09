@@ -29,7 +29,8 @@
     {% comment %} changed tag.word to tag.name {% endcomment %}
     <p>Tags: {% for tag in recipe.tags.all %}{{ tag.name }} {% endfor %}</p>
     <h2>Description</h2>
-    {% comment %} remove paragraph tags and add "| markdownify" to recipe.description {% endcomment %}
+    {% comment %} remove paragraph tags and add "| markdownify" 
+    to recipe.description {% endcomment %}
     {{ recipe.description | markdownify }}
     <h2>Ingredients</h2>
     <table>

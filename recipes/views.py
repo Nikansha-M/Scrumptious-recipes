@@ -10,8 +10,21 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 from recipes.forms import RatingForm
 
-# from recipes.forms import RecipeForm
+# from recipes.forms import Recipe
 from recipes.models import Recipe
+
+
+def log_rating(request, recipe_id):
+    if request.method == "POST":
+        form = RatingForm(request.POST)
+        try:
+            if form.is_valid():
+                rating = form.save(commit=False)
+                rating.recipe = Recipe.objects.get(pk=recipe_id)
+                rating.save()
+        except Recipe.DoesNotExist:
+            return redirect("recipes_list")
+    return redirect("recipe_detail", pk=recipe_id)
 
 
 # def create_recipe(request):
@@ -61,6 +74,7 @@ class RecipeCreateView(LoginRequiredMixin, CreateView):
 #     }
 #     return render(request, "recipes/edit.html", context)
 
+
 class RecipeUpdateView(LoginRequiredMixin, UpdateView):
     model = Recipe
     template_name = "recipes/edit.html"
@@ -75,6 +89,7 @@ class RecipeUpdateView(LoginRequiredMixin, UpdateView):
 #     }
 #     return render(request, "recipes/list.html", context)
 
+
 class RecipeListView(ListView):
     model = Recipe
     template_name = "recipes/list.html"
@@ -87,7 +102,9 @@ class RecipeListView(ListView):
         if not query:
             # user input should be a string
             query = ""
-        # from our listof all the recipes, filter out through our description to see if it matches the query
+        # from our listof all the recipes, filter out through our description 
+        # to see if it matches the query
+
         return Recipe.objects.filter(
             description__icontains=query,
         )
@@ -102,6 +119,7 @@ class RecipeListView(ListView):
 #     }
 #     return render(request, "recipes/detail.html", context)
 
+
 class RecipeDetailView(DetailView):
     model = Recipe
     template_name = "recipes/detail.html"
@@ -113,21 +131,6 @@ class RecipeDetailView(DetailView):
         context["rating_form"] = RatingForm()
         # return the contect for Django to use
         return context
-
-
-
-def log_rating(request, recipe_id):
-    if request.method == "POST":
-        form = RatingForm(request.POST)
-        try:
-            if form.is_valid():
-                rating = form.save(commit=False)
-                rating.recipe = Recipe.objects.get(pk=recipe_id)
-                rating.save()
-        except Recipe.DoesNotExist:
-            return redirect("recipes_list")
-    return redirect("recipe_detail", pk=recipe_id)
-
 
 
 class RecipeDeleteView(LoginRequiredMixin, DeleteView):
