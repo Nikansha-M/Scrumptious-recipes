@@ -27,7 +27,7 @@
     </form>
 
     {% comment %} changed tag.word to tag.name {% endcomment %}
-    <p>Tags: {% for tag in recipe.tags.all %}{{ tag.name }} {% endfor %}</p>
+    <p>Tags: {% for tag in recipe.tags.all %} {{ tag.name }} {% endfor %}</p>
     <h2>Description</h2>
     {% comment %} remove paragraph tags and add "| markdownify" 
     to recipe.description {% endcomment %}
@@ -46,6 +46,23 @@
             <td>{{ ingredient.amount }}</td>
             <td>{{ ingredient.measure.name }}</td>
             <td>{{ ingredient.food.name }}</td>
+            
+            {% comment %} ShoppingItems custom HTML form {% endcomment %}
+            <td>
+              {% if ingredient.food not in food_in_shopping_list %}
+                {% comment %} form method is POST because we're creating
+                something (we use POST when creating, updating, or deleting something) 
+                {% endcomment %}
+                <form method="POST" action="{% url 'shopping_item_create' %}">
+                  {% csrf_token %}
+                  <input type="hidden" name="ingredient_id" value="{{ ingredient.id }}">
+                  <button>+ My Shopping List</button>
+                </form>
+              {% else %}
+                In your Shopping List
+              {% endif %}
+            </td>
+
           </tr>
         {% endfor %}
       </tbody>

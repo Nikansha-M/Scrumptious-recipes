@@ -54,7 +54,9 @@ class Ingredient(models.Model):
         on_delete=models.CASCADE
     )
     # to limit the amount of ingredients to 20
-    amount = models.FloatField(validators=[MinValueValidator(1),MaxValueValidator(20)],)
+    amount = models.FloatField(
+        validators=[MinValueValidator(1),MaxValueValidator(20)],
+        )
     measure = models.ForeignKey(
         "Measure",
         on_delete=models.PROTECT
@@ -99,3 +101,19 @@ class Rating(models.Model):
 
     def __str__(self):
         return str(self.recipe) + " rating: " + str(self.value)
+
+
+class ShoppingItem(models.Model):
+    user = models.ForeignKey(
+        USER_MODEL,
+        related_name="shopping_items",
+        on_delete=models.CASCADE,
+        null=True,
+    )
+    food_item = models.ForeignKey(
+        "FoodItem",
+        on_delete=models.PROTECT,
+    )
+
+    def __str__(self):
+        return f"{self.food_item} for {self.user}"

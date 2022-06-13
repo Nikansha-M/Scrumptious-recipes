@@ -10,8 +10,11 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 
 from recipes.forms import RatingForm
 
-# from recipes.forms import Recipe
-from recipes.models import Recipe
+# from recipes.forms import Recipe, ShoppingItem, Ingredient
+from recipes.models import Recipe, ShoppingItem, Ingredient
+
+# from django.views.decorators.http import require_http_methods
+from django.db import IntegrityError
 
 
 def log_rating(request, recipe_id):
@@ -56,7 +59,6 @@ class RecipeCreateView(LoginRequiredMixin, CreateView):
         return super().form_valid(form)
 
 
-
 # def change_recipe(request, pk):
 #     if Recipe and RecipeForm:
 #         instance = Recipe.objects.get(pk=pk)
@@ -80,7 +82,6 @@ class RecipeUpdateView(LoginRequiredMixin, UpdateView):
     template_name = "recipes/edit.html"
     fields = ["name", "author", "description", "image"]
     success_url = reverse_lazy("recipes_list")
-
 
 
 # def show_recipes(request):
@@ -110,7 +111,6 @@ class RecipeListView(ListView):
         )
 
 
-
 # def show_recipe(request, pk):
 #     context = {
 #         "recipe": Recipe.objects.get(pk=pk) if Recipe else None,
@@ -129,7 +129,19 @@ class RecipeDetailView(DetailView):
         # add our form to the context dictionary using the key
         # rating_form
         context["rating_form"] = RatingForm()
-        # return the contect for Django to use
+
+        # create a new empty foods list
+        foods = []
+
+        # for each item in user's shopping items
+        for item in self.request.user.shopping_items.all():
+            # add shopping item's food to the list 
+            foods.append(item.food_item)
+        
+        # put that list into the context
+        context["food_in_shopping_list"] = foods
+
+        # return the context for Django to use
         return context
 
 
@@ -137,3 +149,46 @@ class RecipeDeleteView(LoginRequiredMixin, DeleteView):
     model = Recipe
     template_name = "recipes/delete.html"
     success_url = reverse_lazy("recipes_list")
+
+
+class ShoppingItemListView(ListView):
+    model = ShoppingItem
+    template_name = "shopping_items/list.html"
+    paginate_by = 3
+
+    # filter shoppint items by logged in user
+    def get_queryset(self):
+        return ShoppingItem.objects.filter(user=self.request.user)
+
+
+# # this view only handles HTTP POST requests
+# @require_http_methods(["POST"])
+def create_shopping_item(request):
+    
+    # get value of ingredient_id from the request.POST dictionary
+    ingredient_id = request.POST.get("ingredient_id")
+
+    # get specific ingredient from the ingredient model
+    ingredient = Ingredient.objects.get(id=ingredient_id)
+
+    # get the current user
+    user = request.user
+    try:
+        # create the new shopping item in the database
+        ShoppingItem.objects.create(
+            food_item=ingredient.food,
+            user=user
+        )
+    # catch the error if ingredient is saved in the database
+    except IntegrityError:
+        # don't do anything with the error
+        pass
+
+    # return to recipe page with a redirect
+    return redirect("recipe_detail", pk=ingredient.recipe.id)
+    
+
+def delete_all_shopping_items(request):
+    # delete all shopping item for the logged in user
+    ShoppingItem.objects.filter(user=request.user).delete()
+    return redirect("shopping_item_list")

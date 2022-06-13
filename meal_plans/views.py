@@ -18,6 +18,7 @@ class MealPlanListView(LoginRequiredMixin, ListView):
     template_name = "meal_plans/list.html"
     paginate_by = 3
 
+    # self represents the instance of the class that was created
     def get_queryset(self):
         return MealPlan.objects.filter(owner=self.request.user)
 
