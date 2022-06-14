@@ -8,7 +8,7 @@
             <a href="{% url 'mealplans_delete' mealplan.pk %}">Delete</a>
         </div>
 
-        <h2>Recipe{{ Recipes | pluralize }} for {{ mealplan.date | date:"l, F j, Y" }}</h2>
+        <h2>Recipe{{ mealplan.recipes.all|pluralize }} for {{ mealplan.date | date:"l, F j, Y" }}</h2>
         {% for recipe in mealplan.recipes.all %}
             <p>
                 <a href="{% url 'recipe_detail' recipe.pk %}">{{ recipe.name }}</a>

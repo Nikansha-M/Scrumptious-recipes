@@ -45,14 +45,15 @@ def log_rating(request, recipe_id):
 #     }
 #     return render(request, "recipes/new.html", context)
 
+
 class RecipeCreateView(LoginRequiredMixin, CreateView):
     model = Recipe
     template_name = "recipes/new.html"
-    fields = ["name", "description", "image"]
-    # after creating a new recipe, this will redirect folks 
+    fields = ["name", "description", "image", "servings"]
+    # after creating a new recipe, this will redirect folks
     # back to the home page
     success_url = reverse_lazy("recipes_list")
-    
+
     # assign current logged in user as the author to any recipe that is made
     def form_valid(self, form):
         form.instance.author = self.request.user
@@ -80,7 +81,7 @@ class RecipeCreateView(LoginRequiredMixin, CreateView):
 class RecipeUpdateView(LoginRequiredMixin, UpdateView):
     model = Recipe
     template_name = "recipes/edit.html"
-    fields = ["name", "author", "description", "image"]
+    fields = ["name", "description", "image", "servings"]
     success_url = reverse_lazy("recipes_list")
 
 
@@ -103,7 +104,7 @@ class RecipeListView(ListView):
         if not query:
             # user input should be a string
             query = ""
-        # from our listof all the recipes, filter out through our description 
+        # from our listof all the recipes, filter out through our description
         # to see if it matches the query
 
         return Recipe.objects.filter(
@@ -135,9 +136,11 @@ class RecipeDetailView(DetailView):
 
         # for each item in user's shopping items
         for item in self.request.user.shopping_items.all():
-            # add shopping item's food to the list 
+            # add shopping item's food to the list
             foods.append(item.food_item)
         
+        context["servings"] = self.request.GET.get("servings")
+
         # put that list into the context
         context["food_in_shopping_list"] = foods
 
@@ -164,7 +167,7 @@ class ShoppingItemListView(ListView):
 # # this view only handles HTTP POST requests
 # @require_http_methods(["POST"])
 def create_shopping_item(request):
-    
+
     # get value of ingredient_id from the request.POST dictionary
     ingredient_id = request.POST.get("ingredient_id")
 
@@ -175,10 +178,7 @@ def create_shopping_item(request):
     user = request.user
     try:
         # create the new shopping item in the database
-        ShoppingItem.objects.create(
-            food_item=ingredient.food,
-            user=user
-        )
+        ShoppingItem.objects.create(food_item=ingredient.food, user=user)
     # catch the error if ingredient is saved in the database
     except IntegrityError:
         # don't do anything with the error
@@ -186,7 +186,7 @@ def create_shopping_item(request):
 
     # return to recipe page with a redirect
     return redirect("recipe_detail", pk=ingredient.recipe.id)
-    
+
 
 def delete_all_shopping_items(request):
     # delete all shopping item for the logged in user

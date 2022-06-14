@@ -1,5 +1,7 @@
 {% extends 'base.html' %}
 {% load markdownify %}
+{% comment %} loading the module name of resizer.py {% endcomment %}
+{% load resizer %}
 
 
 {% block content %}
@@ -18,6 +20,19 @@
       Created on {{ recipe.created }} |
       Updated on {{ recipe.updated }}
     </p>
+
+    {% comment %} Servings {% endcomment %}
+    {% if recipe.servings %}
+      <p>
+        Serves: {{ servings|default_if_none:recipe.servings }}
+      </p>
+      
+      <form method="GET">
+        <input required type="number" name="servings">
+        <button>Resize</button>
+      </form>
+
+    {% endif %}
 
     {% comment %} Add the RatingForm so it shows up on the page {% endcomment %}
     <form method="post" action="{% url 'recipe_rating' recipe.id %}">
@@ -43,7 +58,7 @@
       <tbody>
         {% for ingredient in recipe.ingredients.all %}
           <tr>
-            <td>{{ ingredient.amount }}</td>
+            <td>{{ ingredient|resize_to:servings }}</td>
             <td>{{ ingredient.measure.name }}</td>
             <td>{{ ingredient.food.name }}</td>
             
